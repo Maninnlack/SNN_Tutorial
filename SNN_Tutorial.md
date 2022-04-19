@@ -75,9 +75,9 @@ show_channel_urls: true
 
 - 打开 NVIDIA 控制面板，帮助中找到系统信息
 
-![image-20220417111008019](SNN中文教程.assets/image-20220417111008019.png)
+![image-1](./img/image-20220417111008019.png)
 
-![image-20220417111038250](SNN中文教程.assets/image-20220417111038250.png)
+![image-2](./img/image-20220417111038250.png)
 
 这里可以看到我的电脑 CUDA 版本是 11.4，那么 11.4 以下的版本都可以安装。
 
@@ -87,7 +87,7 @@ show_channel_urls: true
 
 - 点击 Install ，然后选择 Stable 稳定版，Windows 版本，conda 安装， python 语言， CUDA 版本选择的是 11.3。
 
-![image-20220417111406346](SNN中文教程.assets/image-20220417111406346.png)
+![image-3](./img/image-20220417111406346.png)
 
 - 然后复制 Run this Command 的命令
 - 打开 Anaconda Prompt，使用 `activate pytorch` 激活新建的 pytorch 环境，然后粘贴刚刚的命令，但是删掉最后的 `-c pytorch`。执行`conda install pytorch torchvision torchaudio cudatoolkit=11.3` 即可。
@@ -123,7 +123,7 @@ Pycharm 在官网上有免费版可以下载。下载地址：https://www.jetbra
 
 安装好 Pycharm 后，打开 Pycharm ，新建纯 Python 项目，选择好项目地址后，下面的 Python 解释器选择先前配置的解释器，然后找到之前新建的 conda 环境中的 python.exe 的位置，路径一般是：`C:\Users\username\Anaconda3\envs\pytorch\python.exe`，其中 username 是用户名。然后点击创建即可新建 python项目。
 
-![image-20220418094641875](SNN中文教程.assets/image-20220418094641875.png)
+![image-4](./img/image-20220418094641875.png)
 
 
 
