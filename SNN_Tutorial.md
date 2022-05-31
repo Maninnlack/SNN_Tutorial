@@ -123,29 +123,13 @@ Pycharm 在官网上有免费版可以下载。下载地址：https://www.jetbra
 
 安装好 Pycharm 后，打开 Pycharm ，新建纯 Python 项目，选择好项目地址后，下面的 Python 解释器选择先前配置的解释器，然后找到之前新建的 conda 环境中的 python.exe 的位置，路径一般是：`C:\Users\username\Anaconda3\envs\pytorch\python.exe`，其中 username 是用户名。然后点击创建即可新建 python项目。
 
-![image-4](./img/image-20220418094641875.png)
+![image-20220531165648742](SNN_Tutorial.assets/image-20220531165648742.png)
 
 
 
 ## 网络模型训练
 
-### 1. 新建python项目
-
-- 打开PyCharm
-
-![image-20220531165437104](SNN_Tutorial.assets/image-20220531165437104.png)
-
-- 选择纯python项目，项目路径自行选择即可，然后选择'先钱配置的解释器'，找到之前新建的spikingjelly环境，（如果没有可以点击右侧的'...'，然后找到'C：\User\username\Anaconda3\envs\spikingjelly\python.exe'文件即可，最后点创建。
-
-![image-20220531165648742](SNN_Tutorial.assets/image-20220531165648742.png)
-
-之后在文件中选择新建，然后选择python文件即可。
-
-![image-20220531170035786](SNN_Tutorial.assets/image-20220531170035786.png)
-
-![image-20220531170000812](SNN_Tutorial.assets/image-20220531170000812.png)
-
-### 2. 导入需要用到的包
+### 1. 导入需要用到的包
 
 ```python
 import torch
@@ -159,7 +143,7 @@ from spikingjelly.clock_driven import neuron, surrogate, functional
 
 
 
-### 3. 设置超参数
+### 2. 设置超参数
 
 ```python
 BATCH_SIZE = 512		# 每批处理数据的数量
@@ -170,7 +154,7 @@ DEVICE = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')		# 使�
 
 
 
-### 4. 下载数据集
+### 3. 下载数据集
 
 在 Python 项目中，新建 train.py 文件。使用torchvision.datasets，其中含有一些常见的 MNIST 等数据集，使用方法如下：
 
@@ -200,7 +184,7 @@ test_dataloader = DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=True)
 
 
 
-### 5. 搭建脉冲神经网络模型
+### 4. 搭建脉冲神经网络模型
 
 ```python
 class SNN(nn.Module):
@@ -236,7 +220,7 @@ class SNN(nn.Module):
 
 
 
-### 6. 训练及测试函数
+### 5. 训练及测试函数
 
 **训练函数**
 
