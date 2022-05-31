@@ -94,7 +94,9 @@ def train(model, device, train_loader, optimizer, log, epoch, writer):
         print('Train : [{}/{} ({:.0f}%)]\tLoss: {:.6f}\tepoch:{}'.format(
             index * len(img), len(train_loader.dataset),
             100. * index / len(train_loader), loss.item(), epoch))
-        log.append(f"Train loss: {loss.item():.6f}\n")
+        log.append('Train : [{}/{} ({:.0f}%)]\tLoss: {:.6f}\tepoch:{}'.format(
+            index * len(img), len(train_loader.dataset),
+            100. * index / len(train_loader), loss.item(), epoch))
 
 def test(model, device, test_loader, log, epoch, writer):
     model.eval()
@@ -118,7 +120,7 @@ def test(model, device, test_loader, log, epoch, writer):
         100. * correct / len(test_loader.dataset), epoch))
     log.append(f"Test set: Average loss: {test_loss:.4f}, \
                 Accuracy: {correct}/{len(test_loader.dataset)} \
-                ({100. * correct / len(test_loader.dataset):.0f}%)\n")
+                ({100. * correct / len(test_loader.dataset):.0f}%) epoch:{epoch}\n")
 
 if __name__ == '__main__':
     model = SNN(tau=2.0, T=8).to(DEVICE)

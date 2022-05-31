@@ -139,6 +139,7 @@ import torch.optim as optim
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
 from spikingjelly.clock_driven import neuron, surrogate, functional
+from torch.utils.tensorboard import SummaryWriter
 ```
 
 
@@ -215,7 +216,7 @@ class SNN(nn.Module):
         out_spike_counter = self.fc(x)
         for t in range(1, self.T):
             out_spike_counter += self.fc(x)
-        return F.log_softmax(out_spike_counter/ self.T)
+        return F.log_softmax(out_spike_counter / self.T)
 ```
 
 
@@ -225,49 +226,54 @@ class SNN(nn.Module):
 **训练函数**
 
 ```python
-def train(model, device, train_loader, optimizer, log):
+def train(model, device, train_loader, optimizer, log, epoch, writer):
     model.train()
+
     for index, (img, label) in enumerate(train_loader):
         img, label = img.to(device), label.to(device)
+        label_one_hot = F.one_hot(label, 10).float()
 
         optimizer.zero_grad()
         output = model(img)
-        loss = F.nll_loss(output, label)
+        loss = F.mse_loss(output, label_one_hot)
         loss.backward()
         optimizer.step()
 
         functional.reset_net(model)
 
-        if index % 30 == 0:
-            print('Train : [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
-                index * len(img), len(train_loader.dataset),
-                100. * index / len(train_loader), loss.item()))
-            log.append(f"Train loss: {loss.item():.6f}\n")
+        writer.add_scalar('train loss', loss, index + epoch * len(train_loader))
+        print('Train : [{}/{} ({:.0f}%)]\tLoss: {:.6f}\tepoch:{}'.format(
+            index * len(img), len(train_loader.dataset),
+            100. * index / len(train_loader), loss.item(), epoch))
+        log.append(f"Train loss: {loss.item():.6f}\n")
 ```
 
 **测试函数**
 
 ```python
-def test(model, device, test_loader, log):
+def test(model, device, test_loader, log, epoch, writer):
     model.eval()
     test_loss = 0
     correct = 0
     for index, (img, label) in enumerate(test_loader):
         img, label = img.to(device), label.to(device)
+        label_one_hot = F.one_hot(label, 10).float()
+
         output = model(img)
         functional.reset_net(model)
 
-        test_loss += F.nll_loss(output, label, reduction='sum').item()
+        test_loss += F.mse_loss(output, label_one_hot)
         pred = output.max(1, keepdim=True)[1]       # 找到概率最大的下标
         correct += pred.eq(label.view_as(pred)).sum().item()
 
-    test_loss /= len(test_loader.dataset)
-    print('Test set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)'.format(
+    test_loss /= len(test_loader)
+    writer.add_scalar('test loss', test_loss, epoch)
+    print('Test set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%) epoch:{}\n'.format(
         test_loss, correct, len(test_loader.dataset),
-        100. * correct / len(test_loader.dataset)))
+        100. * correct / len(test_loader.dataset), epoch))
     log.append(f"Test set: Average loss: {test_loss:.4f}, \
                 Accuracy: {correct}/{len(test_loader.dataset)} \
-                ({100. * correct / len(test_loader.dataset):.0f}%)\n")
+                ({100. * correct / len(test_loader.dataset):.0f}%) epoch:{epoch}\n")
 ```
 
 **主函数**
@@ -275,18 +281,20 @@ def test(model, device, test_loader, log):
 ```python
 if __name__ == '__main__':
     model = SNN(tau=2.0, T=8).to(DEVICE)
-    optimizer = optim.Adam(model.parameters())
+    optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
     log = []
+    writer = SummaryWriter()
 
     for epoch in range(EPOCHS):
         log.append(f"Train epoch: {epoch} / {EPOCHS}\n")
-        train(model, DEVICE, train_dataloader, optimizer, log)
-        test(model, DEVICE, test_dataloader, log)
+        train(model, DEVICE, train_dataloader, optimizer, log, epoch, writer)
+        test(model, DEVICE, test_dataloader, log, epoch, writer)
 
     # save model
     torch.save(model, './MNIST.pth')
+    writer.close()
 
-    with open('./SNN_train.txt', 'a+') as f:
+    with open('./SNN_train.txt', 'w+') as f:
         for i in range(len(log)):
             f.write(log[i])
 ```
