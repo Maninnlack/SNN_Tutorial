@@ -115,7 +115,7 @@ Spikingjelly 的安装地址：https://github.com/fangwei123456/spikingjelly
 
 Python 可用的集成开发环境（IDE）有很多，例如 Pycharm，VScode，Jupyter notebook，Spyder等等。这里推荐使用 Pycharm，因为对于新手而言，Pycharm 有很多足够智能的帮助（调试、语法高亮、环境管理）。
 
-Pycharm 在官网上有免费版可以下载。下载地址：https://www.jetbrains.com/pycharm/download/#section=windows，选择社区办即可。
+Pycharm 在官网上有免费版可以下载。下载地址：https://www.jetbrains.com/pycharm/download/#section=windows，选择社区版即可。
 
 打开安装包后，一路 next 即可。
 
@@ -294,7 +294,7 @@ if __name__ == '__main__':
 
 训练结果最后可以达到测试集98%准确度。
 
-
+**完整教程代码**：[Maninnlack/SNN_Tutorial (github.com)](https://github.com/Maninnlack/SNN_Tutorial)
 
 
 
