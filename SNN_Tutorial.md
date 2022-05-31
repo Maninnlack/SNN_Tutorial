@@ -90,7 +90,7 @@ show_channel_urls: true
 ![image-3](./img/image-20220417111406346.png)
 
 - 然后复制 Run this Command 的命令
-- 打开 Anaconda Prompt，使用 `activate pytorch` 激活新建的 pytorch 环境，然后粘贴刚刚的命令，但是删掉最后的 `-c pytorch`。执行`conda install pytorch torchvision torchaudio cudatoolkit=11.3` 即可。
+- 打开 Anaconda Prompt，使用 `conda activate pytorch` 激活新建的 pytorch 环境，然后粘贴刚刚的命令，~~但是删掉最后的 `-c pytorch`~~。执行`conda install pytorch torchvision torchaudio cudatoolkit=11.3` 即可。
 
 - 完成安装后，进行测试。进入 pytorch 环境后， 输入 python 回车，进入python。然后输入 `import torch` ，不报错说明安装成功。然后看看 CUDA 是否安装成功，输入 `torch.cuda.is_available()`， 返回 True 则大功告成。
 
@@ -129,7 +129,23 @@ Pycharm 在官网上有免费版可以下载。下载地址：https://www.jetbra
 
 ## 网络模型训练
 
-### 1. 导入需要用到的包
+### 1. 新建python项目
+
+- 打开PyCharm
+
+![image-20220531165437104](SNN_Tutorial.assets/image-20220531165437104.png)
+
+- 选择纯python项目，项目路径自行选择即可，然后选择'先钱配置的解释器'，找到之前新建的spikingjelly环境，（如果没有可以点击右侧的'...'，然后找到'C：\User\username\Anaconda3\envs\spikingjelly\python.exe'文件即可，最后点创建。
+
+![image-20220531165648742](SNN_Tutorial.assets/image-20220531165648742.png)
+
+之后在文件中选择新建，然后选择python文件即可。
+
+![image-20220531170035786](SNN_Tutorial.assets/image-20220531170035786.png)
+
+![image-20220531170000812](SNN_Tutorial.assets/image-20220531170000812.png)
+
+### 2. 导入需要用到的包
 
 ```python
 import torch
@@ -143,17 +159,18 @@ from spikingjelly.clock_driven import neuron, surrogate, functional
 
 
 
-### 2. 设置超参数
+### 3. 设置超参数
 
 ```python
 BATCH_SIZE = 512		# 每批处理数据的数量
 EPOCHS = 10				# 数据集训练的轮次
+LEARNING_RATE = 10e-3   # 学习率
 DEVICE = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')		# 使用gpu还是cpu
 ```
 
 
 
-### 3. 下载数据集
+### 4. 下载数据集
 
 在 Python 项目中，新建 train.py 文件。使用torchvision.datasets，其中含有一些常见的 MNIST 等数据集，使用方法如下：
 
@@ -183,7 +200,7 @@ test_dataloader = DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=True)
 
 
 
-### 4. 搭建脉冲神经网络模型
+### 5. 搭建脉冲神经网络模型
 
 ```python
 class SNN(nn.Module):
@@ -219,7 +236,7 @@ class SNN(nn.Module):
 
 
 
-### 3. 训练及测试函数
+### 6. 训练及测试函数
 
 **训练函数**
 
